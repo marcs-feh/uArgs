@@ -14,7 +14,6 @@ typedef void (*FlagHandler) (const char** args, size_t n);
 struct argsCLIFlag {
 	const char *id;
 	FlagAction action;
-	bool takesArg;
 };
 
 struct flagRegistry {
@@ -40,6 +39,8 @@ extern void Args_pushFlag(FlagRegistry *reg, Flag flag);
 extern void Args_popFlag(FlagRegistry *reg);
 // Return pointer to flag of certain id in registry, returns NULL if not found.
 extern Flag* Args_getFlag(FlagRegistry *reg, const char* id);
+// Executes flag action, checks for NULL.
+void Args_runFlag(const Flag *f, const char* arg);
 // Executes n args using a registry.
 extern void Args_execFlags(FlagRegistry *reg, const char** args, size_t n);
 // Returns size of flag registry.
