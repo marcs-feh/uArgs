@@ -28,8 +28,6 @@ struct flagRegistry {
 };
 
 // Placeholder function, does nothing.
-extern void Args_nop(const char* arg);
-// Placeholder function, does nothing.
 extern void Args_nohandle(const char** args, size_t n);
 // Creates a new registry for flags.
 extern FlagRegistry Args_newReg();
@@ -38,11 +36,12 @@ extern void Args_pushFlag(FlagRegistry *reg, Flag flag);
 // Pop flag from registry.
 extern void Args_popFlag(FlagRegistry *reg);
 // Return pointer to flag of certain id in registry, returns NULL if not found.
-extern Flag* Args_getFlag(FlagRegistry *reg, const char* id);
+extern const Flag* Args_getFlag(const FlagRegistry *reg, const char* id);
 // Executes flag action, checks for NULL.
 void Args_runFlag(const Flag *f, const char* arg);
 // Executes n args using a registry.
 extern void Args_execFlags(FlagRegistry *reg, const char** args, size_t n);
 // Returns size of flag registry.
 extern size_t Args_regSize(FlagRegistry *reg);
+
 #endif

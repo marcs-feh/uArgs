@@ -14,9 +14,6 @@ typedef struct {
 } TypeArgPair;
 
 void
-Args_nop(const char* arg){ return; }
-
-void
 Args_nohandle(const char** args, size_t n){ return; }
 
 size_t
@@ -80,14 +77,14 @@ Args_popFlag(FlagRegistry *reg){
 	reg->len--;
 }
 
-Flag*
-Args_getFlag(FlagRegistry *reg, const char* id){
+const Flag*
+Args_getFlag(const FlagRegistry *reg, const char* id){
 	if(id == NULL || reg == NULL) return NULL;
 
 	for(size_t i = 0; i < reg->len; i++){
 		//printf("cmp: '%s'\t'%s'\n", id, reg->entries[i].id);
 		if(strcmp(id, reg->entries[i].id) == 0)
-			return &(reg->entries[i]);
+			return (reg->entries + i);
 	}
 
 	return NULL;
@@ -146,18 +143,18 @@ Args_execFlags(FlagRegistry *reg, const char **args, size_t n){
 	if(n == 0) return;
 	TypeArgPair typeMap[n + 1];
 	const char *arg = NULL;
-	Flag *flag = NULL;
+	const Flag *flag = NULL;
 	size_t arglen = 0;
 	Args_scan(reg, typeMap, args, n);
 
 	typeMap[n].arg = NULL; // padding
-	//typeMap[n].t = REGULAR;
+	typeMap[n].t = REGULAR;
 	for(size_t i = 0; i < n ; i++){
 	 	arg = args[i];
 		arglen = strlen(arg);
 		switch(typeMap[i].t){
 			case SHORT_FLAG:
-				printf("SHORT FLAG: '%s'\n", arg);
+				//printf("SHORT FLAG: '%s'\n", arg);
 				for(size_t j = 1; j < arglen; j++){
 					char flagbuf[] = {arg[j], '\0'};
 					flag = Args_getFlag(reg, flagbuf);
@@ -168,8 +165,9 @@ Args_execFlags(FlagRegistry *reg, const char **args, size_t n){
 						//reg->unknownFlagHandler(args, n);
 				}
 			break;
+
 			case LONG_FLAG:
-				printf("LONG FLAG: '%s'\n", arg);
+				//printf("LONG FLAG: '%s'\n", arg);
 				flag = Args_getFlag(reg, arg + 2);
 				if(flag != NULL)
 					Args_runFlag(flag, args[i + 1]);
@@ -177,9 +175,9 @@ Args_execFlags(FlagRegistry *reg, const char **args, size_t n){
 					printf("[e] unknown flag: %s\n", arg);
 					//reg->unknownFlagHandler(args, n);
 			break;
-			case REGULAR:
-				printf("ARG: '%s'\n", arg);
-			break;
+
+			default: break;
+			//printf("ARG: '%s'\n", arg);
 		}
 	}
 }
