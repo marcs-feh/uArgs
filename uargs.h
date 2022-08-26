@@ -1,10 +1,10 @@
 #ifndef INCLUDE_ARGS_H_
 #define INCLUDE_ARGS_H_
 
-#define UARGS_MAX_ENTRIES 128
-
 #include <stddef.h>
 #include <stdbool.h>
+
+#define UARGS_MAX_ENTRIES 128
 
 typedef struct uArgsFlag uArgsFlag;
 typedef struct uArgsRegistry uArgsRegistry;
@@ -25,12 +25,8 @@ struct uArgsRegistry {
 	size_t len;
 	// Callback to when some unknown flag is found.
 	uArgsRegisterHandler unknownFlagHandler;
-	// Callback to when a flag that requires argument does not receive one.
-	uArgsRegisterHandler missingArgHandler;
 };
 
-// Placeholder function, does nothing.
-extern void uArgs_nohandle(const char** args, size_t n);
 // Creates a new registry for flags.
 extern uArgsRegistry uArgs_newReg();
 // Push flag to registry.

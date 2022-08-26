@@ -16,6 +16,10 @@ flag.
 Run `make` to create the static library, you can also embed the code directly
 into your project pretty easily, as it consists of just 2 files.
 
+## Documentation
+
+The DOC.md file documents all functions and the unchecked runtime errors.
+
 ## Examples
 
 Check out the `examples.c` file, you can compile it in this dir with `clang -o

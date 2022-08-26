@@ -1,3 +1,14 @@
+/*
+	Example file for μArgs
+	Compile with:
+		$ clang -o example example.c -L. -luargs
+	Try it out with:
+		$ ./example --help
+		$ ./example -b 12
+		$ ./example -Sb 0
+		$ ./example -b
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,14 +48,14 @@ int main(int argc, const char** argv){
 	uArgs_pushFlag(&r, (uArgsFlag){"b", bananaCallback});
 	uArgs_pushFlag(&r, (uArgsFlag){"S", smile});
 	uArgs_pushFlag(&r, (uArgsFlag){" -no", NULL}); 			 // Bad flags will fail to push
-	
+
 	// Fail on not enough args
 	if(argc < 2){
 		helpMsg(NULL);
 		return EXIT_FAILURE;
 	}
 	uArgs_execFlags(&r, argv + 1, argc - 1); // +1 and -1 to ignore program name
-	
+
 	return 0;
 }
 

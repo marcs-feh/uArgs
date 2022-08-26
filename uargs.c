@@ -13,11 +13,6 @@ typedef struct {
 	const char* arg;
 } TypeArgPair;
 
-void
-uArgs_nohandle(const char** args, size_t n){
-	return;
-}
-
 size_t
 uArgs_regSize(uArgsRegistry *reg){
 	return reg->len;
@@ -29,8 +24,7 @@ uArgs_newReg(){
 	for(size_t i = 0; i < UARGS_MAX_ENTRIES; i++)
 		reg.entries[i] = (uArgsFlag){NULL, NULL};
 	reg.len = 0;
-	reg.unknownFlagHandler = uArgs_nohandle;
-	reg.missingArgHandler = uArgs_nohandle;
+	reg.unknownFlagHandler = NULL;
 	return reg;
 }
 
@@ -41,9 +35,7 @@ uArgs_validateFlagID(uArgsFlag f){
 		return false;
 	size_t idlen = strlen(f.id);
 	bool foundAlphaNumeric = false;
-	//printf("%s\t", f.id);
 	for(size_t i = 0; i < idlen; i++){
-		//printf("(%c:%d) ", f.id[i], foundAlphaNumeric);
 		// check for spaces and quotes
 		if(f.id[i] == ' ' || f.id[i] == '\n' || f.id[i] == '\t' ||
 			 f.id[i] == '"' || f.id[i] == '\'')
@@ -55,7 +47,6 @@ uArgs_validateFlagID(uArgsFlag f){
 		if(f.id[i] != '-')
 			foundAlphaNumeric = true;
 	}
-	//printf("\n");
 	return true;
 }
 
@@ -63,7 +54,7 @@ void
 uArgs_pushFlag(uArgsRegistry *reg, uArgsFlag f){
 	// check for lenght, nulls, weather flag already exists
 	// and if it has a valid id
-	if(reg->len + 1>= UARGS_MAX_ENTRIES || reg == NULL || f.id == NULL 
+	if(reg->len + 1>= UARGS_MAX_ENTRIES || reg == NULL || f.id == NULL
 		 || uArgs_getFlag(reg, f.id) != NULL || !uArgs_validateFlagID(f))
 		return ;
 	reg->entries[reg->len] = f;
@@ -74,7 +65,7 @@ void
 uArgs_popFlag(uArgsRegistry *reg){
 	if(reg->len == 0 || reg == NULL)
 		return;
-	
+
 	reg->entries[reg->len - 1] = (uArgsFlag){NULL, NULL};
 	reg->len--;
 }
@@ -84,7 +75,6 @@ uArgs_getFlag(const uArgsRegistry *reg, const char* id){
 	if(id == NULL || reg == NULL) return NULL;
 
 	for(size_t i = 0; i < reg->len; i++){
-		//printf("cmp: '%s'\t'%s'\n", id, reg->entries[i].id);
 		if(strcmp(id, reg->entries[i].id) == 0)
 			return (reg->entries + i);
 	}
@@ -110,31 +100,26 @@ uArgs_scan(uArgsRegistry *reg, TypeArgPair* map, const char** args, size_t n){
 		map[i].arg = arg;
 	 	arg = args[i];
 		arglen = strlen(arg);
-		//printf("> %s\t", arg);
 		if(arglen > 1){
 			// short flag
-			if(arg[0] == '-' && arg[1] != '-'){ 
-				//printf("SHORT\n");
+			if(arg[0] == '-' && arg[1] != '-'){
 				if(uArgs_getFlag(reg, arg) == NULL){
 					map[i].t = SHORT_FLAG;
 				}
 			}
 			// long flag
 			else if (arg[0] == '-' && arg[1] == '-' && arglen > 2){
-				//printf("LONG\n");
 				if(uArgs_getFlag(reg, arg) == NULL){
 					map[i].t = LONG_FLAG;
 				}
 			}
 			// arg
 			else {
-				//printf("ARG\n");
 				map[i].t = REGULAR;
 			}
 		}
 		// too short to be a flag
 		else {
-			//printf("SMALL ARG\n");
 			map[i].t = REGULAR;
 		}
 	}
@@ -157,30 +142,25 @@ uArgs_execFlags(uArgsRegistry *reg, const char **args, size_t n){
 		arglen = strlen(arg);
 		switch(typeMap[i].t){
 			case SHORT_FLAG:
-				//printf("SHORT FLAG: '%s'\n", arg);
 				for(size_t j = 1; j < arglen; j++){
 					char flagbuf[] = {arg[j], '\0'};
 					flag = uArgs_getFlag(reg, flagbuf);
 					if(flag != NULL)
 						uArgs_runFlag(flag, args[i + 1]);
-					else
+					else if(reg->unknownFlagHandler != NULL)
 						reg->unknownFlagHandler(args, n);
-						//printf("[e] unknown flag: -%s\n", flagbuf);
 				}
 			break;
 
 			case LONG_FLAG:
-				//printf("LONG FLAG: '%s'\n", arg);
 				flag = uArgs_getFlag(reg, arg + 2);
 				if(flag != NULL)
 					uArgs_runFlag(flag, args[i + 1]);
-				else
-					printf("[e] unknown flag: %s\n", arg);
-					//reg->unknownFlagHandler(args, n);
+				else if(reg->unknownFlagHandler != NULL)
+						reg->unknownFlagHandler(args, n);
 			break;
 
 			default: break;
-			//printf("ARG: '%s'\n", arg);
 		}
 	}
 }
