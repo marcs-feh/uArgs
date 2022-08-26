@@ -13,8 +13,8 @@ Reading from registries or flags is OK.
 
 Each flag has a `uArgsFlagAction` function pointer which takes a `const char*`
 as an argument, checking for `NULL` in cases where it is intended to use this
-argument must be done *by the user defined function*, because - will **not** do
-it.
+argument must be done *by the user defined function*, because μArgs will **not**
+do it.
 
 ## Functions
 
@@ -24,7 +24,7 @@ Creates a new registry that can hold up to 128 flags.
 
 ### `void uArgs_pushFlag(uArgsRegistry *reg, uArgsFlag flag);`
 
-Push flag to registry, if the flag is invalid, NULL or the registry is at max
+Push flag to registry, if the flag is invalid, `NULL` or the registry is at max
 capacity, it won't be inserted.
 
 ### `void uArgs_popFlag(uArgsRegistry *reg);`
