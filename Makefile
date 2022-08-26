@@ -11,5 +11,5 @@ libargs.a: args.o
 args.o: args.c args.h
 	$(CC) $(CFLAGS) -c args.c -o args.o
 
-clear:
+clean:
 	rm -f *.o libargs.a

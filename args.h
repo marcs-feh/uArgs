@@ -8,11 +8,13 @@
 
 typedef struct argsCLIFlag Flag;
 typedef struct flagRegistry FlagRegistry;
-typedef void (*FlagAction) (const char* arg);
-typedef void (*FlagHandler) (const char** args, size_t n);
+typedef void* (*FlagAction) (const char* arg);
+typedef void* (*RegisterHandler) (const char** args, size_t n);
 
 struct argsCLIFlag {
+	// Flag identifier, without any leading '-'.
 	const char *id;
+	// Action that this flag executes.
 	FlagAction action;
 };
 
@@ -22,13 +24,13 @@ struct flagRegistry {
 	// How many entries are being used.
 	size_t len;
 	// Callback to when some unknown flag is found.
-	FlagHandler unknownFlagHandler;
+	RegisterHandler unknownFlagHandler;
 	// Callback to when a flag that requires argument does not receive one.
-	FlagHandler missingArgHandler;
+	RegisterHandler missingArgHandler;
 };
 
 // Placeholder function, does nothing.
-extern void Args_nohandle(const char** args, size_t n);
+extern void* Args_nohandle(const char** args, size_t n);
 // Creates a new registry for flags.
 extern FlagRegistry Args_newReg();
 // Push flag to registry.
@@ -38,7 +40,7 @@ extern void Args_popFlag(FlagRegistry *reg);
 // Return pointer to flag of certain id in registry, returns NULL if not found.
 extern const Flag* Args_getFlag(const FlagRegistry *reg, const char* id);
 // Executes flag action, checks for NULL.
-void Args_runFlag(const Flag *f, const char* arg);
+extern void Args_runFlag(const Flag *f, const char* arg);
 // Executes n args using a registry.
 extern void Args_execFlags(FlagRegistry *reg, const char** args, size_t n);
 // Returns size of flag registry.

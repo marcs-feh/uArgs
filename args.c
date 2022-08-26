@@ -13,8 +13,10 @@ typedef struct {
 	const char* arg;
 } TypeArgPair;
 
-void
-Args_nohandle(const char** args, size_t n){ return; }
+void*
+Args_nohandle(const char** args, size_t n){
+	return NULL;
+}
 
 size_t
 Args_regSize(FlagRegistry *reg){
@@ -145,10 +147,11 @@ Args_execFlags(FlagRegistry *reg, const char **args, size_t n){
 	const char *arg = NULL;
 	const Flag *flag = NULL;
 	size_t arglen = 0;
-	Args_scan(reg, typeMap, args, n);
 
+	Args_scan(reg, typeMap, args, n);
 	typeMap[n].arg = NULL; // padding
 	typeMap[n].t = REGULAR;
+
 	for(size_t i = 0; i < n ; i++){
 	 	arg = args[i];
 		arglen = strlen(arg);
@@ -161,8 +164,8 @@ Args_execFlags(FlagRegistry *reg, const char **args, size_t n){
 					if(flag != NULL)
 						Args_runFlag(flag, args[i + 1]);
 					else
-						printf("[e] unknown flag: -%s\n", flagbuf);
-						//reg->unknownFlagHandler(args, n);
+						reg->unknownFlagHandler(args, n);
+						//printf("[e] unknown flag: -%s\n", flagbuf);
 				}
 			break;
 
