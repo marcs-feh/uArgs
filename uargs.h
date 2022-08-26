@@ -8,8 +8,8 @@
 
 typedef struct uArgsFlag uArgsFlag;
 typedef struct uArgsRegistry uArgsRegistry;
-typedef void* (*uArgsFlagAction) (const char* arg);
-typedef void* (*uArgsRegisterHandler) (const char** args, size_t n);
+typedef void (*uArgsFlagAction) (const char* arg);
+typedef void (*uArgsRegisterHandler) (const char** args, size_t n);
 
 struct uArgsFlag {
 	// Flag identifier, without any leading '-'.
@@ -30,7 +30,7 @@ struct uArgsRegistry {
 };
 
 // Placeholder function, does nothing.
-extern void* uArgs_nohandle(const char** args, size_t n);
+extern void uArgs_nohandle(const char** args, size_t n);
 // Creates a new registry for flags.
 extern uArgsRegistry uArgs_newReg();
 // Push flag to registry.

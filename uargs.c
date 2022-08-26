@@ -13,9 +13,9 @@ typedef struct {
 	const char* arg;
 } TypeArgPair;
 
-void*
+void
 uArgs_nohandle(const char** args, size_t n){
-	return NULL;
+	return;
 }
 
 size_t
