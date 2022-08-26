@@ -1,7 +1,6 @@
 #include "uargs.h"
 #include <string.h>
 
-#include <stdio.h> // debug
 typedef enum {
 	REGULAR,
 	SHORT_FLAG,
