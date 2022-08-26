@@ -5,11 +5,11 @@ ARFLAGS = rcs
 
 .PHONY: clear
 
-libargs.a: args.o
-	$(AR) $(ARFLAGS) libargs.a args.o
+libuargs.a: uargs.o
+	$(AR) $(ARFLAGS) libuargs.a uargs.o
 
-args.o: args.c args.h
-	$(CC) $(CFLAGS) -c args.c -o args.o
+uargs.o: uargs.c uargs.h
+	$(CC) $(CFLAGS) -c uargs.c -o uargs.o
 
 clean:
-	rm -f *.o libargs.a
+	rm -f *.o libuargs.a
