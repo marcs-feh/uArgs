@@ -42,6 +42,8 @@ void smile(const char* _){
 }
 
 int main(int argc, const char** argv){
+	for(int i = 0; i < argc; i++)
+		printf("%d\t%s\n", i, argv[i]);
 	uArgsRegistry r = uArgs_newReg();
 	uArgs_pushFlag(&r, (uArgsFlag){"h", helpMsg}); 	  // Short flag -h
 	uArgs_pushFlag(&r, (uArgsFlag){"help", helpMsg}); // Long flag --help

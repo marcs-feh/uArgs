@@ -96,8 +96,8 @@ uArgs_scan(uArgsRegistry *reg, TypeArgPair* map, const char** args, size_t n){
 	size_t arglen = 0;
 
 	for(size_t i = 0; i < n; i++){
+		arg = args[i];
 		map[i].arg = arg;
-	 	arg = args[i];
 		arglen = strlen(arg);
 		if(arglen > 1){
 			// short flag
