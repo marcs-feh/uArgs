@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -O2 -pipe -std=c17 -Wall
+CFLAGS = -O2 -pipe -std=c17 -Wall -Wextra -Wvla -Werror
 AR = ar
 ARFLAGS = rcs
 

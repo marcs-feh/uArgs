@@ -127,7 +127,8 @@ uArgs_scan(uArgsRegistry *reg, TypeArgPair* map, const char** args, size_t n){
 void
 uArgs_execFlags(uArgsRegistry *reg, const char **args, size_t n){
 	if(n == 0) return;
-	TypeArgPair typeMap[n + 1];
+	if(n > UARGS_MAX_ENTRIES) n = UARGS_MAX_ENTRIES; // clamp n
+	TypeArgPair typeMap[UARGS_MAX_ENTRIES + 1];
 	const char *arg = NULL;
 	const uArgsFlag *flag = NULL;
 	size_t arglen = 0;
@@ -136,7 +137,7 @@ uArgs_execFlags(uArgsRegistry *reg, const char **args, size_t n){
 	typeMap[n].arg = NULL; // padding
 	typeMap[n].t = REGULAR;
 
-	for(size_t i = 0; i < n ; i++){
+	for(size_t i = 0; i < n; i++){
 	 	arg = args[i];
 		arglen = strlen(arg);
 		switch(typeMap[i].t){

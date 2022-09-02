@@ -17,7 +17,7 @@
 void helpMsg(const char* _){
 	printf("Usage: bin [-h/-b N]\n"
 				 "\t-b N    make N bananas\n"
-				 "\t-s      smile\n"
+				 "\t-S      smile\n"
 				 "\t-h      display this help message\n"
 		);
 }
